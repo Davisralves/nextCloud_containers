@@ -221,6 +221,12 @@ sudo chown -R 1000:1000 /docker-data/nextcloud/
 
 ---
 
-## 📄 Licença
+## � Veja também
+
+- [Meu post no LinkedIn sobre este projeto](https://www.linkedin.com/feed/update/urn:li:activity:7358451783330885632/)
+
+---
+
+## �📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
