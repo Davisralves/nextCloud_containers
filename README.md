@@ -1,31 +1,31 @@
-# ☁️ Nuvem Pessoal com Nextcloud em qualquer máquina
+# ☁️ Personal Cloud with Nextcloud on any machine
 
-Este projeto configura uma nuvem pessoal segura e eficiente utilizando **Nextcloud**, com suporte a **Redis** e **MariaDB** para melhor desempenho, tudo orquestrado com **Docker Compose**.
+This project sets up a secure and efficient personal cloud using **Nextcloud**, with **Redis** and **MariaDB** support for better performance, all orchestrated with **Docker Compose**.
 
-> Ideal para Raspberry Pi, mas também funciona em qualquer máquina com Linux ou Windows.
-
----
-
-## 📦 Serviços incluídos
-
-- **Nextcloud**: Servidor de arquivos com suporte a WebDAV, calendário, contatos e extensões
-- **MariaDB**: Banco de dados utilizado pelo Nextcloud
-- **Redis**: Cache para otimizar performance e reduzir carga no banco de dados
+> Ideal for Raspberry Pi, but also works on any machine with Linux or Windows.
 
 ---
 
-## 🚀 Como usar
+## 📦 Included services
 
-### 1. Clone o repositório
+- **Nextcloud**: File server with WebDAV, calendar, contacts and extensions support
+- **MariaDB**: Database used by Nextcloud
+- **Redis**: Cache to optimize performance and reduce database load
+
+---
+
+## 🚀 How to use
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Davisralves/nextCloud_containers.git
 cd nextCloud_containers
 ```
 
-### 2. Configure as variáveis de ambiente
+### 2. Configure environment variables
 
-Copie o arquivo de exemplo e personalize as configurações:
+Copy the example file and customize the settings:
 
 **Linux/macOS:**
 ```bash
@@ -37,89 +37,89 @@ cp .env.example .env
 copy .env.example .env
 ```
 
-Agora edite o arquivo `.env` criado e altere as senhas padrão:
+Now edit the created `.env` file and change the default passwords:
 
 ```env
-# Identidade do usuário (use `id` para descobrir)
+# User identity (use `id` to find out)
 PUID=1000
 PGID=1000
 
-# Fuso horário
+# Timezone
 TZ=America/Sao_Paulo
 
-# Porta HTTPS do Nextcloud
+# Nextcloud HTTPS port
 PORT=8443
 
-# Banco de Dados - ALTERE ESTAS SENHAS!
+# Database - CHANGE THESE PASSWORDS!
 MYSQL_ROOT_PASSWORD=your_root_password
 DATABASE_PASSWORD=your_db_password
 
-# Redis - ALTERE ESTA SENHA!
+# Redis - CHANGE THIS PASSWORD!
 REDIS_PASSWORD=redis_super_secret_password
 ```
 
-> ⚠️ **Importante**: Altere todas as senhas (`your_root_password`, `your_db_password`, `redis_super_secret_password`) para valores seguros antes de executar o projeto!
+> ⚠️ **Important**: Change all passwords (`your_root_password`, `your_db_password`, `redis_super_secret_password`) to secure values before running the project!
 
-### 3. Execute o Docker Compose
+### 3. Run Docker Compose
 
 ```bash
 docker-compose up -d
 ```
 
-### 4. Aguarde a inicialização
+### 4. Wait for initialization
 
-Aguarde alguns minutos para que todos os serviços sejam iniciados. Você pode acompanhar os logs com:
+Wait a few minutes for all services to start. You can follow the logs with:
 
 ```bash
 docker-compose logs -f
 ```
 
-### 5. Acesse o Nextcloud
+### 5. Access Nextcloud
 
-Abra seu navegador e acesse:
+Open your browser and go to:
 
 ```
 https://localhost:8443
 ```
 
-> 🔒 **Nota**: Como estamos usando HTTPS com certificado auto-assinado, seu navegador mostrará um aviso de segurança. Clique em "Avançado" e "Prosseguir para localhost".
+> 🔒 **Note**: Since we're using HTTPS with a self-signed certificate, your browser will show a security warning. Click "Advanced" and "Proceed to localhost".
 
-### 6. Configure o administrador
+### 6. Configure the administrator
 
-Na primeira vez que acessar, você será direcionado para a tela de configuração inicial:
+The first time you access, you will be directed to the initial configuration screen:
 
-1. **Crie uma conta de administrador:**
-   - Nome de usuário: `admin` (ou o nome que preferir)
-   - Senha: escolha uma senha forte
+1. **Create an administrator account:**
+   - Username: `admin` (or whatever you prefer)
+   - Password: choose a strong password
 
-2. **Configuração do banco de dados:**
-   - Tipo: **MariaDB/MySQL**
-   - Usuário do banco: `nextcloud`
-   - Senha do banco: a mesma definida em `DATABASE_PASSWORD` no arquivo `.env`
-   - Nome do banco: `nextcloud_db`
-   - Host do banco: `nextcloud_db`
+2. **Database configuration:**
+   - Type: **MariaDB/MySQL**
+   - Database user: `nextcloud`
+   - Database password: the same defined in `DATABASE_PASSWORD` in the `.env` file
+   - Database name: `nextcloud_db`
+   - Database host: `nextcloud_db`
 
-3. Clique em **"Finalizar configuração"**
+3. Click **"Finish setup"**
 
 ---
 
-## 🔧 Configurações adicionais
+## 🔧 Additional configurations
 
-### Configurar Redis para cache
+### Configure Redis for cache
 
-Após a instalação inicial, adicione as seguintes configurações no arquivo de configuração do Nextcloud:
+After the initial installation, add the following configurations to the Nextcloud configuration file:
 
-1. Acesse o container do Nextcloud:
+1. Access the Nextcloud container:
 ```bash
 docker exec -it nextcloud bash
 ```
 
-2. Edite o arquivo de configuração:
+2. Edit the configuration file:
 ```bash
 nano /config/www/nextcloud/config/config.php
 ```
 
-3. Adicione as configurações do Redis:
+3. Add the Redis configurations:
 ```php
 'memcache.local' => '\OC\Memcache\Redis',
 'memcache.distributed' => '\OC\Memcache\Redis',
@@ -127,15 +127,15 @@ nano /config/www/nextcloud/config/config.php
 'redis' => array(
   'host' => 'nextcloud_redis',
   'port' => 6379,
-  'password' => 'sua_senha_do_redis', // A mesma do arquivo .env
+  'password' => 'your_redis_password', // Same as in .env file
 ),
 ```
 
-### Acessar de outros dispositivos na rede
+### Access from other devices on the network
 
-Para acessar o Nextcloud de outros dispositivos na mesma rede:
+To access Nextcloud from other devices on the same network:
 
-1. Descubra o IP da máquina host:
+1. Discover the host machine IP:
    ```bash
    # Linux/macOS
    ip addr show
@@ -144,49 +144,49 @@ Para acessar o Nextcloud de outros dispositivos na mesma rede:
    ipconfig
    ```
 
-2. Acesse via: `https://IP_DA_MAQUINA:8443`
+2. Access via: `https://YOUR_MACHINE_IP:8443`
 
-3. Adicione o IP nas configurações confiáveis do Nextcloud editando o `config.php`:
+3. Add the IP to the trusted configurations in Nextcloud by editing `config.php`:
    ```php
    'trusted_domains' => 
    array (
      0 => 'localhost',
-     1 => 'SEU_IP_AQUI',
+     1 => 'YOUR_IP_HERE',
    ),
    ```
 
 ---
 
-## 📱 Aplicativos móveis
+## 📱 Mobile apps
 
-- **Android**: [Nextcloud na Play Store](https://play.google.com/store/apps/details?id=com.nextcloud.client)
-- **iOS**: [Nextcloud na App Store](https://apps.apple.com/app/nextcloud/id1125420102)
+- **Android**: [Nextcloud on Play Store](https://play.google.com/store/apps/details?id=com.nextcloud.client)
+- **iOS**: [Nextcloud on App Store](https://apps.apple.com/app/nextcloud/id1125420102)
 
-Configure os apps com:
-- **Servidor**: `https://SEU_IP:8443`
-- **Usuário**: o administrador criado na configuração inicial
-- **Senha**: senha do administrador
+Configure the apps with:
+- **Server**: `https://YOUR_IP:8443`
+- **User**: the administrator created in the initial setup
+- **Password**: administrator password
 
 ---
 
-## 🛠️ Comandos úteis
+## 🛠️ Useful commands
 
-### Verificar status dos containers
+### Check containers status
 ```bash
 docker-compose ps
 ```
 
-### Ver logs em tempo real
+### View logs in real time
 ```bash
 docker-compose logs -f
 ```
 
-### Parar os serviços
+### Stop services
 ```bash
 docker-compose down
 ```
 
-### Fazer backup dos dados
+### Backup data
 ```bash
 # Linux/macOS
 tar -czf nextcloud-backup-$(date +%Y%m%d).tar.gz /docker-data/nextcloud/
@@ -195,7 +195,7 @@ tar -czf nextcloud-backup-$(date +%Y%m%d).tar.gz /docker-data/nextcloud/
 Compress-Archive -Path "C:\docker-data\nextcloud\*" -DestinationPath "nextcloud-backup-$(Get-Date -Format 'yyyyMMdd').zip"
 ```
 
-### Atualizar os containers
+### Update containers
 ```bash
 docker-compose pull
 docker-compose up -d
@@ -203,24 +203,24 @@ docker-compose up -d
 
 ---
 
-## 🔍 Solução de problemas
+## 🔍 Troubleshooting
 
-### Container não inicia
-- Verifique se as portas não estão em uso: `netstat -tulpn | grep 8443`
-- Verifique os logs: `docker-compose logs nextcloud`
+### Container won't start
+- Check if ports are not in use: `netstat -tulpn | grep 8443`
+- Check the logs: `docker-compose logs nextcloud`
 
-### Erro de permissão nos dados
+### Data permission error
 ```bash
 # Linux/macOS
 sudo chown -R 1000:1000 /docker-data/nextcloud/
 ```
 
-### Esqueci a senha do administrador
-1. Acesse o container: `docker exec -it nextcloud bash`
-2. Reset da senha: `php /config/www/nextcloud/occ user:resetpassword admin`
+### Forgot administrator password
+1. Access the container: `docker exec -it nextcloud bash`
+2. Reset password: `php /config/www/nextcloud/occ user:resetpassword admin`
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is under the MIT license. See the [LICENSE](LICENSE) file for more details.
